@@ -1,0 +1,57 @@
+```{r}
+library(knitr)
+library(tidyverse)
+library(janitor)
+library(lubridate) 
+library(here) 
+library(sf) 
+library(tmap)
+library(tidycensus)
+```
+
+```{r}
+bikeshare <- df <- read_csv(here("data_raw", "202209-capitalbikeshare-tripdata.csv"))
+neigh=st_read(here("data_raw","dc_neigh.geojson")) %>% clean_names()
+class(neigh)
+```
+
+```{r}
+census_api_key("e20bbef4315eae437393461fd7f2b4126b419749")
+```
+
+```{r}
+df_census=get_acs(geography = "tract",
+                  variables=c("median_inc"="B06011_001"),
+                  state="DC",geometry=TRUE,year=2018) 
+```
+```{r}
+
+```
+want to count rides, grouped by neighborhood
+
+```{r}
+df_cens=df_census %>% select(-moe) %>% spread(variable,estimate) 
+```
+
+
+
+
+point - 0-dimensional geometry containing a single point 
+linestring - sequence of points connected by straight, non-self intersecting line pieces; one-dimensional geometry 
+polygon
+
+multipoint - bunch of points 
+linestring - connected lines 
+multilinestring - multiple disjoint collections of linestrings 
+polygon - polygon 
+multipolygon - multiple disjoint polygons
+geometrycollection - mixture of all the other types in one plot
+
+
+is there a correlation between income and ridership? 
+is there a different temporal pattern for different income levels?
+can we figure out income of people working in the area as opposed to living? 
+
+tmap - density stuff? like per square mile, per blocks, density map that looks like topography
+  can also use ggplot
+use math for density distribution maybe?
